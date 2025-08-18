@@ -34,10 +34,10 @@ export function Dashboard({ onNavigate }: DashboardProps) {
   return (
     <div className="p-6 space-y-6">
       {/* Welcome Section */}
-      <div className="bg-gradient-to-r from-green-500 to-blue-600 rounded-lg p-6 text-white">
+      <div className="bg-green-gradient rounded-lg p-6 text-white shadow-green">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold mb-2">
+            <h1 className="mb-2">
               Welcome back, {state.user.name}! 👋
             </h1>
             <p className="text-green-100 mb-4">
@@ -61,57 +61,57 @@ export function Dashboard({ onNavigate }: DashboardProps) {
 
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => onNavigate('learn')}>
+        <Card className="lingua-card cursor-pointer transition-all duration-200 hover:scale-[1.05]" onClick={() => onNavigate('learn')}>
           <CardContent className="p-6">
             <div className="flex items-center space-x-3">
               <div className="p-2 bg-green-100 rounded-lg">
-                <BookOpen className="w-6 h-6 text-green-600" />
+                <BookOpen className="w-6 h-6 text-primary" />
               </div>
               <div>
-                <p className="text-2xl font-bold">{completedLessons}/{totalLessons}</p>
-                <p className="text-sm text-gray-600">Lessons Completed</p>
+                <p className="font-bold">{completedLessons}/{totalLessons}</p>
+                <p className="text-muted-foreground">Lessons Completed</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => onNavigate('groups')}>
+        <Card className="lingua-card cursor-pointer transition-all duration-200 hover:scale-[1.05]" onClick={() => onNavigate('groups')}>
           <CardContent className="p-6">
             <div className="flex items-center space-x-3">
               <div className="p-2 bg-blue-100 rounded-lg">
                 <Users className="w-6 h-6 text-blue-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold">{joinedGroups}</p>
-                <p className="text-sm text-gray-600">Study Groups</p>
+                <p className="font-bold">{joinedGroups}</p>
+                <p className="text-muted-foreground">Study Groups</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => onNavigate('progress')}>
+        <Card className="lingua-card cursor-pointer transition-all duration-200 hover:scale-[1.05]" onClick={() => onNavigate('progress')}>
           <CardContent className="p-6">
             <div className="flex items-center space-x-3">
               <div className="p-2 bg-yellow-100 rounded-lg">
                 <Trophy className="w-6 h-6 text-yellow-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold">{unlockedAchievements}</p>
-                <p className="text-sm text-gray-600">Achievements</p>
+                <p className="font-bold">{unlockedAchievements}</p>
+                <p className="text-muted-foreground">Achievements</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => onNavigate('calls')}>
+        <Card className="lingua-card cursor-pointer transition-all duration-200 hover:scale-[1.05]" onClick={() => onNavigate('calls')}>
           <CardContent className="p-6">
             <div className="flex items-center space-x-3">
               <div className="p-2 bg-purple-100 rounded-lg">
                 <Clock className="w-6 h-6 text-purple-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold">{currentWeekAverage}%</p>
-                <p className="text-sm text-gray-600">Weekly Average</p>
+                <p className="font-bold">{currentWeekAverage}%</p>
+                <p className="text-muted-foreground">Weekly Average</p>
               </div>
             </div>
           </CardContent>
@@ -226,7 +226,8 @@ export function Dashboard({ onNavigate }: DashboardProps) {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <Button 
-              className="h-20 flex flex-col space-y-2 bg-green-600 hover:bg-green-700"
+              className="h-20 flex flex-col space-y-2 lingua-button-primary transition-all duration-200 hover:scale-[1.05]"
+              variant="ghost"
               onClick={() => onNavigate('learn')}
             >
               <Play className="w-6 h-6" />
@@ -234,8 +235,8 @@ export function Dashboard({ onNavigate }: DashboardProps) {
             </Button>
             
             <Button 
-              className="h-20 flex flex-col space-y-2" 
-              variant="outline"
+              className="h-20 flex flex-col space-y-2 lingua-button-secondary transition-all duration-200 hover:scale-[1.05]" 
+              variant="ghost"
               onClick={() => onNavigate('groups')}
             >
               <Users className="w-6 h-6" />
@@ -243,8 +244,8 @@ export function Dashboard({ onNavigate }: DashboardProps) {
             </Button>
             
             <Button 
-              className="h-20 flex flex-col space-y-2" 
-              variant="outline"
+              className="h-20 flex flex-col space-y-2 lingua-button-secondary transition-all duration-200 hover:scale-[1.05]" 
+              variant="ghost"
               onClick={() => onNavigate('calls')}
             >
               <Clock className="w-6 h-6" />
@@ -252,8 +253,8 @@ export function Dashboard({ onNavigate }: DashboardProps) {
             </Button>
             
             <Button 
-              className="h-20 flex flex-col space-y-2" 
-              variant="outline"
+              className="h-20 flex flex-col space-y-2 lingua-button-secondary transition-all duration-200 hover:scale-[1.05]" 
+              variant="ghost"
               onClick={() => onNavigate('progress')}
             >
               <TrendingUp className="w-6 h-6" />

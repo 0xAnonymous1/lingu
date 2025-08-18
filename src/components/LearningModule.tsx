@@ -198,10 +198,10 @@ export function LearningModule() {
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
-      case 'Beginner': return 'bg-green-100 text-green-800';
-      case 'Intermediate': return 'bg-yellow-100 text-yellow-800';
-      case 'Advanced': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'Beginner': return 'bg-green-100 text-green-800 border-green-200';
+      case 'Intermediate': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      case 'Advanced': return 'bg-red-100 text-red-800 border-red-200';
+      default: return 'bg-muted text-muted-foreground border-border';
     }
   };
 
@@ -488,37 +488,37 @@ export function LearningModule() {
       {/* Lessons Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {lessonsWithProgress.map((lesson) => (
-          <Card key={lesson.id} className="hover:shadow-md transition-shadow cursor-pointer group">
+          <Card key={lesson.id} className="lingua-card cursor-pointer group transition-all duration-200 hover:shadow-lg hover:scale-[1.02]">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <Badge className={getDifficultyColor(lesson.difficulty)} variant="outline">
                   {lesson.difficulty}
                 </Badge>
                 {lesson.completed && (
-                  <CheckCircle className="w-5 h-5 text-green-500" />
+                  <CheckCircle className="w-5 h-5 text-primary" />
                 )}
               </div>
-              <CardTitle className="text-lg">{lesson.title}</CardTitle>
-              <p className="text-sm text-gray-600">{lesson.description}</p>
+              <CardTitle>{lesson.title}</CardTitle>
+              <p className="text-muted-foreground">{lesson.description}</p>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                <div className="flex items-center text-sm text-gray-600 space-x-4">
+                <div className="flex items-center text-muted-foreground space-x-4">
                   <span className="flex items-center">
                     <Clock className="w-4 h-4 mr-1" />
                     {lesson.duration}
                   </span>
                   <span className="flex items-center">
-                    <Star className="w-4 h-4 mr-1" />
+                    <Star className="w-4 h-4 mr-1 text-yellow-500" />
                     {lesson.points} pts
                   </span>
                 </div>
                 
                 {lesson.score && (
-                  <div className="text-sm">
-                    <div className="flex justify-between items-center mb-1">
-                      <span>Best Score:</span>
-                      <span className="font-medium">{lesson.score}%</span>
+                  <div>
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-muted-foreground">Best Score:</span>
+                      <span className="font-medium text-foreground">{lesson.score}%</span>
                     </div>
                     <ProgressBar value={lesson.score} className="h-2" />
                   </div>
@@ -526,16 +526,23 @@ export function LearningModule() {
 
                 <div className="flex flex-wrap gap-1">
                   {lesson.topics.map((topic, index) => (
-                    <Badge key={index} variant="secondary" className="text-xs">
+                    <Badge key={index} variant="secondary">
                       {topic}
                     </Badge>
                   ))}
                 </div>
 
                 <Button 
-                  className="w-full group-hover:bg-green-600 group-hover:text-white transition-colors"
-                  variant={lesson.completed ? "outline" : "default"}
-                  onClick={() => startLesson(lesson)}
+                  className={`w-full transition-all duration-200 ${
+                    lesson.completed 
+                      ? 'lingua-button-secondary group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary' 
+                      : 'lingua-button-primary'
+                  }`}
+                  variant="ghost"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    startLesson(lesson);
+                  }}
                 >
                   <Play className="w-4 h-4 mr-2" />
                   {lesson.completed ? 'Practice Again' : 'Start Lesson'}

@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import { useUser } from '@clerk/clerk-react';
 
 // Types
 interface User {
@@ -352,6 +353,29 @@ const AppContext = createContext<{
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(appReducer, getInitialState());
+  
+  // Try to get Clerk user if available
+  let clerkUser = null;
+  try {
+    clerkUser = useUser?.()?.user || null;
+  } catch (error) {
+    // Clerk not available, clerkUser remains null
+  }
+
+  // Update user information when Clerk user data is available
+  useEffect(() => {
+    if (clerkUser) {
+      dispatch({
+        type: 'UPDATE_USER',
+        user: {
+          id: clerkUser.id,
+          name: clerkUser.fullName || `${clerkUser.firstName} ${clerkUser.lastName}`.trim() || 'User',
+          email: clerkUser.primaryEmailAddress?.emailAddress || 'user@example.com',
+          avatar: clerkUser.imageUrl || clerkUser.firstName?.charAt(0) + clerkUser.lastName?.charAt(0) || 'U'
+        }
+      });
+    }
+  }, [clerkUser]);
 
   // Save state to localStorage on changes
   useEffect(() => {
