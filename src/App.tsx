@@ -1,46 +1,35 @@
 import React, { useState } from 'react';
-import { ClerkProvider, SignedIn, SignedOut, useUser } from '@clerk/clerk-react';
-import { Calendar, Users, Phone, BookOpen, Trophy, Settings, MessageCircle, Video } from 'lucide-react';
+import { useUser, useAuth } from '@clerk/clerk-react';
+import { BookOpen } from 'lucide-react';
+
 import { Sidebar } from './components/Sidebar';
 import { Dashboard } from './components/Dashboard';
 import { LearningModule } from './components/LearningModule';
 import { StudyGroups } from './components/StudyGroups';
 import { CallCenter } from './components/CallCenter';
 import { Progress } from './components/Progress';
-import { ClerkLoginPage } from './components/ClerkLoginPage';
+import { LandingPage } from './components/LandingPage';
 import { AppProvider } from './components/AppContext';
 import { Toaster } from './components/ui/sonner';
 import './styles/globals.css';
 
-// Replace this with your actual Clerk publishable key from the Clerk Dashboard
-const CLERK_PUBLISHABLE_KEY = 'pk_test_YOUR_PUBLISHABLE_KEY_HERE';
+// ✅ Correct env import
+const CLERK_PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
-function AppContent() {
+function AppContent({ onBackToLanding }: { onBackToLanding?: () => void }) {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  
-  // Try to get user from Clerk if available
-  let user = null;
-  try {
-    user = useUser?.()?.user || null;
-  } catch (error) {
-    // Clerk not available, user will remain null
-  }
+
+  const { user, isLoaded } = useUser();
 
   const renderContent = () => {
     switch (activeTab) {
-      case 'dashboard':
-        return <Dashboard onNavigate={setActiveTab} />;
-      case 'learn':
-        return <LearningModule />;
-      case 'groups':
-        return <StudyGroups />;
-      case 'calls':
-        return <CallCenter />;
-      case 'progress':
-        return <Progress />;
-      default:
-        return <Dashboard onNavigate={setActiveTab} />;
+      case 'dashboard': return <Dashboard onNavigate={setActiveTab} />;
+      case 'learn': return <LearningModule />;
+      case 'groups': return <StudyGroups />;
+      case 'calls': return <CallCenter />;
+      case 'progress': return <Progress />;
+      default: return <Dashboard onNavigate={setActiveTab} />;
     }
   };
 
@@ -62,86 +51,109 @@ function AppContent() {
             <span className="font-medium text-foreground">LinguaConnect</span>
           </div>
         </div>
-        
-        {/* User Profile - Mobile */}
+
         {user && (
           <div className="flex items-center space-x-2">
-            <img 
-              src={user.imageUrl} 
-              alt={user.fullName || 'User'} 
-              className="w-8 h-8 rounded-full"
-            />
-            <span className="hidden sm:block text-foreground">
-              {user.firstName || 'User'}
-            </span>
+            <img src={user.imageUrl} alt={user.fullName || 'User'} className="w-8 h-8 rounded-full" />
+            <span className="hidden sm:block text-foreground">{user.firstName || 'User'}</span>
           </div>
         )}
       </div>
 
       <div className="flex">
-        {/* Sidebar */}
         <Sidebar 
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           isOpen={isSidebarOpen}
           onClose={() => setIsSidebarOpen(false)}
+          onBackToLanding={onBackToLanding}
         />
-
-        {/* Main Content */}
         <main className="flex-1 lg:ml-64">
-          <div className="min-h-screen">
-            {renderContent()}
-          </div>
+          <div className="min-h-screen">{renderContent()}</div>
         </main>
       </div>
 
-      {/* Mobile Overlay */}
       {isSidebarOpen && (
         <div 
           className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40 lg:hidden"
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
-
-      {/* Toast notifications */}
       <Toaster />
     </div>
   );
 }
 
-function AuthenticatedApp() {
+import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react'
+
+function AuthenticatedApp({ onBackToLanding }: { onBackToLanding?: () => void }) {
   return (
     <AppProvider>
-      <AppContent />
+      <AppContent onBackToLanding={onBackToLanding} />
     </AppProvider>
   );
 }
 
+function LoadingScreen() {
+  return (
+    <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="text-center">
+        <BookOpen className="w-12 h-12 text-primary mx-auto mb-4 animate-pulse" />
+        <h2 className="text-xl font-medium text-foreground mb-2">LinguaConnect</h2>
+        <p className="text-muted-foreground">Loading your account...</p>
+      </div>
+    </div>
+  );
+}
+
+function ClerkAuthWrapper({ onBackToLanding }: { onBackToLanding: () => void }) {
+  const { isLoaded, isSignedIn } = useAuth();
+
+  if (!isLoaded) return <LoadingScreen />;
+  if (isSignedIn) return <AuthenticatedApp onBackToLanding={onBackToLanding} />;
+
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      {/* <p className="text-foreground">Please sign in to continue.</p> */}
+         
+      <SignedIn>
+        <UserButton />
+      </SignedIn>
+    </div>
+  );
+}
+
 export default function App() {
-  const [demoMode, setDemoMode] = useState(false);
+  const [currentView, setCurrentView] = useState<'landing' | 'setup' | 'login' | 'app'>('landing');
 
-  // Check if Clerk is properly configured
-  const isClerkConfigured = CLERK_PUBLISHABLE_KEY && !CLERK_PUBLISHABLE_KEY.includes('YOUR_PUBLISHABLE_KEY_HERE');
+  const isClerkConfigured = !!CLERK_PUBLISHABLE_KEY;
 
-  // If not configured or in demo mode, show the app directly
-  if (!isClerkConfigured || demoMode) {
+  const handleGetStarted = () => {
+    if (isClerkConfigured) setCurrentView('login');
+    else setCurrentView('setup');
+  };
+
+  const handleBackToLanding = () => setCurrentView('landing');
+
+  if (currentView === 'landing') {
+    return <LandingPage onGetStarted={handleGetStarted} onLogin={handleGetStarted} />;
+  }
+
+  if (currentView === 'app') {
     return (
       <div className="min-h-screen">
-        <AuthenticatedApp />
+        <AuthenticatedApp onBackToLanding={handleBackToLanding} />
       </div>
     );
   }
 
-  return (
-    <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY}>
+  if (currentView === 'login' && isClerkConfigured) {
+    return (
       <div className="min-h-screen">
-        <SignedIn>
-          <AuthenticatedApp />
-        </SignedIn>
-        <SignedOut>
-          <ClerkLoginPage />
-        </SignedOut>
+        <ClerkAuthWrapper onBackToLanding={handleBackToLanding} />
       </div>
-    </ClerkProvider>
-  );
+    );
+  }
+
+  return <LandingPage onGetStarted={handleGetStarted} onLogin={handleGetStarted} />;
 }

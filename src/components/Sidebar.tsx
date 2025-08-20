@@ -2,15 +2,20 @@ import React from 'react';
 import { BookOpen, Home, Users, Phone, Trophy, MessageCircle, Settings, User, LogOut } from 'lucide-react';
 import { useUser, useClerk } from '@clerk/clerk-react';
 import { Button } from './ui/button';
+import { useAppContext } from './AppContext';
+import { Badge } from './ui/badge';
 
 interface SidebarProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
   isOpen: boolean;
   onClose: () => void;
+  onBackToLanding?: () => void;
 }
 
-export function Sidebar({ activeTab, setActiveTab, isOpen, onClose }: SidebarProps) {
+export function Sidebar({ activeTab, setActiveTab, isOpen, onClose, onBackToLanding }: SidebarProps) {
+  const { state } = useAppContext();
+  
   // Try to get user from Clerk if available, otherwise null
   let user = null;
   let signOut = null;
@@ -22,14 +27,75 @@ export function Sidebar({ activeTab, setActiveTab, isOpen, onClose }: SidebarPro
     // Clerk hooks not available, use mock data
     user = null;
   }
+
+  // Get joined groups count for badge
+  const joinedGroupsCount = state.studyGroups.filter(group => group.isJoined).length;
   
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: Home },
     { id: 'learn', label: 'Learn', icon: BookOpen },
-    { id: 'groups', label: 'Study Groups', icon: Users },
+    { 
+      id: 'groups', 
+      label: 'Study Groups', 
+      icon: Users,
+      badge: joinedGroupsCount > 0 ? joinedGroupsCount : null
+    },
     { id: 'calls', label: 'Call Center', icon: Phone },
     { id: 'progress', label: 'Progress', icon: Trophy },
   ];
+
+  // Component for rendering groups section
+  const GroupsSection = ({ isMobile = false }) => {
+    if (joinedGroupsCount === 0) return null;
+    
+    return (
+      <div className="px-2 py-4">
+        <div className="px-2 mb-2">
+          <h3 className="text-xs font-medium text-sidebar-foreground/60 uppercase tracking-wider">
+            My Groups ({joinedGroupsCount})
+          </h3>
+        </div>
+        <div className="space-y-1 max-h-32 overflow-y-auto">
+          {state.studyGroups
+            .filter(group => group.isJoined)
+            .slice(0, 4)
+            .map((group) => (
+              <button
+                key={group.id}
+                onClick={() => {
+                  setActiveTab('groups');
+                  if (isMobile) {
+                    onClose();
+                  }
+                }}
+                className="group flex items-center justify-between px-2 py-1.5 text-sm rounded-md w-full transition-colors text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground"
+              >
+                <div className="flex items-center min-w-0 flex-1">
+                  <MessageCircle className="mr-2 flex-shrink-0 h-4 w-4" />
+                  <span className="truncate">{group.name}</span>
+                </div>
+                {group.online > 0 && (
+                  <div className="w-2 h-2 bg-green-500 rounded-full flex-shrink-0"></div>
+                )}
+              </button>
+            ))}
+          {joinedGroupsCount > 4 && (
+            <button
+              onClick={() => {
+                setActiveTab('groups');
+                if (isMobile) {
+                  onClose();
+                }
+              }}
+              className="w-full text-left px-2 py-1.5 text-xs text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors"
+            >
+              +{joinedGroupsCount - 4} more groups
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  };
 
   const handleItemClick = (itemId: string) => {
     setActiveTab(itemId);
@@ -41,8 +107,11 @@ export function Sidebar({ activeTab, setActiveTab, isOpen, onClose }: SidebarPro
   const handleSignOut = () => {
     if (signOut) {
       signOut();
+    } else if (onBackToLanding) {
+      // In demo mode, go back to landing page
+      onBackToLanding();
     } else {
-      // In demo mode, just refresh the page
+      // Fallback: refresh the page
       window.location.reload();
     }
   };
@@ -65,18 +134,31 @@ export function Sidebar({ activeTab, setActiveTab, isOpen, onClose }: SidebarPro
                   <button
                     key={item.id}
                     onClick={() => setActiveTab(item.id)}
-                    className={`group flex items-center px-2 py-2 font-medium rounded-md w-full transition-colors ${
+                    className={`group flex items-center justify-between px-2 py-2 font-medium rounded-md w-full transition-colors ${
                       activeTab === item.id
                         ? 'bg-sidebar-accent text-sidebar-accent-foreground'
                         : 'text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground'
                     }`}
                   >
-                    <Icon className="mr-3 flex-shrink-0 h-6 w-6" />
-                    {item.label}
+                    <div className="flex items-center">
+                      <Icon className="mr-3 flex-shrink-0 h-6 w-6" />
+                      {item.label}
+                    </div>
+                    {item.badge && (
+                      <Badge 
+                        variant="secondary" 
+                        className="ml-2 bg-primary text-primary-foreground text-xs"
+                      >
+                        {item.badge}
+                      </Badge>
+                    )}
                   </button>
                 );
               })}
             </nav>
+
+            {/* My Groups Section - Desktop */}
+            <GroupsSection isMobile={false} />
             
             <div className="flex-shrink-0 border-t border-sidebar-border p-4 space-y-3">
               <div className="flex items-center">
@@ -105,7 +187,7 @@ export function Sidebar({ activeTab, setActiveTab, isOpen, onClose }: SidebarPro
                 className="w-full justify-start text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground"
               >
                 <LogOut className="mr-2 h-4 w-4" />
-                Sign Out
+                {signOut ? 'Sign Out' : 'Back to Home'}
               </Button>
             </div>
           </div>
@@ -138,18 +220,31 @@ export function Sidebar({ activeTab, setActiveTab, isOpen, onClose }: SidebarPro
                   <button
                     key={item.id}
                     onClick={() => handleItemClick(item.id)}
-                    className={`group flex items-center px-2 py-2 font-medium rounded-md w-full transition-colors ${
+                    className={`group flex items-center justify-between px-2 py-2 font-medium rounded-md w-full transition-colors ${
                       activeTab === item.id
                         ? 'bg-sidebar-accent text-sidebar-accent-foreground'
                         : 'text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground'
                     }`}
                   >
-                    <Icon className="mr-3 flex-shrink-0 h-6 w-6" />
-                    {item.label}
+                    <div className="flex items-center">
+                      <Icon className="mr-3 flex-shrink-0 h-6 w-6" />
+                      {item.label}
+                    </div>
+                    {item.badge && (
+                      <Badge 
+                        variant="secondary" 
+                        className="ml-2 bg-primary text-primary-foreground text-xs"
+                      >
+                        {item.badge}
+                      </Badge>
+                    )}
                   </button>
                 );
               })}
             </nav>
+
+            {/* My Groups Section - Mobile */}
+            <GroupsSection isMobile={true} />
             
             <div className="flex-shrink-0 border-t border-sidebar-border p-4 space-y-3">
               <div className="flex items-center">
@@ -178,7 +273,7 @@ export function Sidebar({ activeTab, setActiveTab, isOpen, onClose }: SidebarPro
                 className="w-full justify-start text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground"
               >
                 <LogOut className="mr-2 h-4 w-4" />
-                Sign Out
+                {signOut ? 'Sign Out' : 'Back to Home'}
               </Button>
             </div>
           </div>

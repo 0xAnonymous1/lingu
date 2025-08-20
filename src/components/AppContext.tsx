@@ -83,6 +83,7 @@ type AppAction =
   | { type: 'UPDATE_LESSON_PROGRESS'; lessonId: string; score: number }
   | { type: 'JOIN_GROUP'; groupId: string }
   | { type: 'LEAVE_GROUP'; groupId: string }
+  | { type: 'CREATE_GROUP'; group: Omit<StudyGroup, 'id'> }
   | { type: 'ADD_MESSAGE'; groupId: string; message: Omit<GroupMessage, 'id'> }
   | { type: 'UNLOCK_ACHIEVEMENT'; achievementId: string }
   | { type: 'UPDATE_SETTINGS'; settings: Partial<AppState['settings']> }
@@ -267,6 +268,21 @@ function appReducer(state: AppState, action: AppAction): AppState {
             ? { ...group, isJoined: false, members: Math.max(0, group.members - 1) }
             : group
         )
+      };
+    }
+
+    case 'CREATE_GROUP': {
+      const newGroup: StudyGroup = {
+        ...action.group,
+        id: `group-${Date.now()}`,
+        isJoined: true,
+        messages: [],
+        lastActive: 'now'
+      };
+
+      return {
+        ...state,
+        studyGroups: [...state.studyGroups, newGroup]
       };
     }
 
