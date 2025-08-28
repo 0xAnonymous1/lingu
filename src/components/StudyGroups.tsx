@@ -5,21 +5,18 @@ import {
   Plus,
   Search,
   Globe,
-  Clock,
-  User,
   Send,
   Phone,
   Video,
   UserPlus,
   UserMinus,
-  Settings,
 } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "./ui/card";
+// import {
+//   Card,
+//   CardContent,
+//   CardHeader,
+//   CardTitle,
+// } from "./ui/card";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Badge } from "./ui/badge";
@@ -44,9 +41,7 @@ import { toast } from "sonner";
 
 export function StudyGroups() {
   const { state, dispatch } = useAppContext();
-  const [selectedGroup, setSelectedGroup] = useState<
-    string | null
-  >(null);
+  const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
   const [newMessage, setNewMessage] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [newGroupDialog, setNewGroupDialog] = useState(false);
@@ -60,16 +55,12 @@ export function StudyGroups() {
 
   const filteredGroups = state.studyGroups.filter(
     (group) =>
-      group.name
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase()) ||
-      group.language
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase()),
+      group.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      group.language.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const selectedGroupData = state.studyGroups.find(
-    (g) => g.id === selectedGroup,
+    (g) => g.id === selectedGroup
   );
 
   const scrollToBottom = () => {
@@ -104,10 +95,7 @@ export function StudyGroups() {
   };
 
   const handleCreateGroup = () => {
-    if (
-      !newGroupForm.name.trim() ||
-      !newGroupForm.language.trim()
-    ) {
+    if (!newGroupForm.name.trim() || !newGroupForm.language.trim()) {
       toast.error("Please fill in all required fields");
       return;
     }
@@ -214,28 +202,19 @@ export function StudyGroups() {
             <h1 className="text-xl font-semibold text-gray-900">
               Study Groups
             </h1>
-            <Dialog
-              open={newGroupDialog}
-              onOpenChange={setNewGroupDialog}
-            >
+            <Dialog open={newGroupDialog} onOpenChange={setNewGroupDialog}>
               <DialogTrigger asChild>
-                <Button
-                  size="sm"
-                  className="bg-green-600 hover:bg-green-700"
-                >
+                <Button size="sm" className="bg-green-600 hover:bg-green-700">
                   <Plus className="w-4 h-4 mr-1" />
                   Create
                 </Button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>
-                    Create New Study Group
-                  </DialogTitle>
+                  <DialogTitle>Create New Study Group</DialogTitle>
                   <DialogDescription>
-                    Create a new study group to connect with
-                    other language learners from around the
-                    world.
+                    Create a new study group to connect with other language
+                    learners from around the world.
                   </DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4">
@@ -272,15 +251,9 @@ export function StudyGroups() {
                       <SelectValue placeholder="Select level" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="Beginner">
-                        Beginner
-                      </SelectItem>
-                      <SelectItem value="Intermediate">
-                        Intermediate
-                      </SelectItem>
-                      <SelectItem value="Advanced">
-                        Advanced
-                      </SelectItem>
+                      <SelectItem value="Beginner">Beginner</SelectItem>
+                      <SelectItem value="Intermediate">Intermediate</SelectItem>
+                      <SelectItem value="Advanced">Advanced</SelectItem>
                     </SelectContent>
                   </Select>
                   <Textarea
@@ -414,11 +387,7 @@ export function StudyGroups() {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() =>
-                    toast.info(
-                      "Voice call feature coming soon!",
-                    )
-                  }
+                  onClick={() => toast.info("Voice call feature coming soon!")}
                 >
                   <Phone className="w-4 h-4 mr-1" />
                   Voice Call
@@ -426,11 +395,7 @@ export function StudyGroups() {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() =>
-                    toast.info(
-                      "Video call feature coming soon!",
-                    )
-                  }
+                  onClick={() => toast.info("Video call feature coming soon!")}
                 >
                   <Video className="w-4 h-4 mr-1" />
                   Video Call
@@ -455,10 +420,14 @@ export function StudyGroups() {
               selectedGroupData.messages.map((message) => (
                 <div
                   key={message.id}
-                  className={`flex ${message.isMe ? "justify-end" : "justify-start"}`}
+                  className={`flex ${
+                    message.isMe ? "justify-end" : "justify-start"
+                  }`}
                 >
                   <div
-                    className={`flex max-w-xs lg:max-w-md ${message.isMe ? "flex-row-reverse" : "flex-row"}`}
+                    className={`flex max-w-xs lg:max-w-md ${
+                      message.isMe ? "flex-row-reverse" : "flex-row"
+                    }`}
                   >
                     <div className="flex-shrink-0">
                       <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
@@ -468,15 +437,15 @@ export function StudyGroups() {
                       </div>
                     </div>
                     <div
-                      className={`mx-2 ${message.isMe ? "text-right" : "text-left"}`}
+                      className={`mx-2 ${
+                        message.isMe ? "text-right" : "text-left"
+                      }`}
                     >
                       <div className="flex items-center mb-1">
                         <span className="text-sm font-medium text-gray-900 mr-1">
                           {message.userName}
                         </span>
-                        <span className="text-sm">
-                          {message.userCountry}
-                        </span>
+                        <span className="text-sm">{message.userCountry}</span>
                       </div>
                       <div
                         className={`p-3 rounded-lg ${
@@ -490,9 +459,7 @@ export function StudyGroups() {
                         </p>
                       </div>
                       <p className="text-xs text-gray-500 mt-1">
-                        {new Date(
-                          message.timestamp,
-                        ).toLocaleTimeString([], {
+                        {new Date(message.timestamp).toLocaleTimeString([], {
                           hour: "2-digit",
                           minute: "2-digit",
                         })}
@@ -533,12 +500,10 @@ export function StudyGroups() {
               Select a Study Group
             </h2>
             <p className="text-gray-600 mb-4">
-              Choose a group to start chatting with
-              international students
+              Choose a group to start chatting with international students
             </p>
             <p className="text-sm text-gray-500">
-              Join groups to practice languages with native
-              speakers worldwide
+              Join groups to practice languages with native speakers worldwide
             </p>
           </div>
         </div>
@@ -548,16 +513,11 @@ export function StudyGroups() {
       {selectedGroup && (
         <div className="hidden lg:block w-64 bg-white border-l border-gray-200">
           <div className="p-4 border-b border-gray-200">
-            <h3 className="font-semibold text-gray-900">
-              Online Members
-            </h3>
+            <h3 className="font-semibold text-gray-900">Online Members</h3>
           </div>
           <div className="p-4 space-y-3">
             {onlineMembers.map((member, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between"
-              >
+              <div key={index} className="flex items-center justify-between">
                 <div className="flex items-center">
                   <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-3 relative">
                     <span className="text-xs font-medium text-green-700">
@@ -576,18 +536,14 @@ export function StudyGroups() {
                       {member.name}
                     </p>
                     <div className="flex items-center">
-                      <span className="text-sm mr-1">
-                        {member.country}
-                      </span>
+                      <span className="text-sm mr-1">{member.country}</span>
                     </div>
                   </div>
                 </div>
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() =>
-                    toast.info("Private messaging coming soon!")
-                  }
+                  onClick={() => toast.info("Private messaging coming soon!")}
                 >
                   <MessageCircle className="w-4 h-4" />
                 </Button>

@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { Trophy, Calendar, Target, TrendingUp, Award, Star, BookOpen, Users, Phone } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Progress as ProgressBar } from './ui/progress';

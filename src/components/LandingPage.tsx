@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
-import { BookOpen, Users, Phone, Globe, Award, Star, ArrowRight, Play, MessageCircle, Video, Mic, CheckCircle, Menu, X } from 'lucide-react';
+// import React, { useState } from 'react';
+import { BookOpen, Users, Phone, Globe, Award, Star, MessageCircle,  Menu, X } from 'lucide-react';
 import { Button } from './ui/button';
 import { Card, CardContent } from './ui/card';
 // import { ImageWithFallback } from './figma/ImageWithFallback';
 
-interface LandingPageProps {
-  onGetStarted: () => void;
-  onLogin: () => void;
+
+import {  SignedOut, SignInButton } from '@clerk/clerk-react'
+import { useState } from 'react';
 
 
-}
 
-export function LandingPage({ onGetStarted, onLogin }: LandingPageProps) {
+
+export function LandingPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const features = [
@@ -57,13 +57,13 @@ export function LandingPage({ onGetStarted, onLogin }: LandingPageProps) {
     {
       name: "Maria Rodriguez",
       country: "🇲🇽 Mexico",
-      text: "LinguaConnect helped me become fluent in English in just 6 months. The conversation practice with native speakers made all the difference!",
+      text: "Lingu helped me become fluent in English in just 6 months. The conversation practice with native speakers made all the difference!",
       rating: 5,
       language: "Learning English"
     },
     {
       name: "Jean-Pierre Dubois",
-      country: "🇫🇷 France", 
+      country: "🇫🇷 France",
       text: "The study groups are incredible. I've made friends from around the world while learning Spanish. It's like traveling without leaving home!",
       rating: 5,
       language: "Learning Spanish"
@@ -83,6 +83,7 @@ export function LandingPage({ onGetStarted, onLogin }: LandingPageProps) {
     { number: "150+", label: "Countries" },
     { number: "4.9★", label: "User Rating" }
   ];
+  
 
   return (
     <div className="min-h-screen bg-background">
@@ -95,7 +96,7 @@ export function LandingPage({ onGetStarted, onLogin }: LandingPageProps) {
               <div className="p-2 bg-green-gradient rounded-xl shadow-green">
                 <BookOpen className="w-6 h-6 text-white" />
               </div>
-              <span className="text-gradient font-medium">LinguaConnect</span>
+              <span className="text-gradient font-medium">Lingu</span>
             </div>
 
             {/* Desktop Navigation */}
@@ -103,10 +104,15 @@ export function LandingPage({ onGetStarted, onLogin }: LandingPageProps) {
               <a href="#features" className="text-foreground hover:text-primary transition-colors">Features</a>
               <a href="#testimonials" className="text-foreground hover:text-primary transition-colors">Reviews</a>
               <a href="#pricing" className="text-foreground hover:text-primary transition-colors">Pricing</a>
-              <Button variant="ghost" onClick={onLogin}>Sign In</Button>
-              <Button className="lingua-button-primary" onClick={onGetStarted}>
-                Get Started Free
-              </Button>
+          
+ <SignedOut>
+                <SignInButton mode="modal">
+                  <Button variant="outline">Sign In</Button>
+                </SignInButton>
+                    <SignInButton mode="modal">
+                  <Button variant="outline">Get Started Free</Button>
+                </SignInButton>
+              </SignedOut>
             </div>
 
             {/* Mobile menu button */}
@@ -128,10 +134,14 @@ export function LandingPage({ onGetStarted, onLogin }: LandingPageProps) {
               <a href="#testimonials" className="block text-foreground hover:text-primary transition-colors">Reviews</a>
               <a href="#pricing" className="block text-foreground hover:text-primary transition-colors">Pricing</a>
               <div className="space-y-2 pt-2">
-                <Button variant="ghost" className="w-full" onClick={onLogin}>Sign In</Button>
-                <Button className="w-full lingua-button-primary" onClick={onGetStarted}>
-                  Get Started Free
-                </Button>
+               <SignedOut>
+                <SignInButton mode="modal">
+                  <Button variant="outline">Sign In</Button>
+                </SignInButton>
+                    <SignInButton mode="modal">
+                  <Button variant="outline">Get Started Free</Button>
+                </SignInButton>
+              </SignedOut>
               </div>
             </div>
           )}
@@ -141,7 +151,7 @@ export function LandingPage({ onGetStarted, onLogin }: LandingPageProps) {
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-green-50 to-blue-50 py-20 lg:py-32">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%2310b981%22%20fill-opacity%3D%220.05%22%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2230%22%20r%3D%221%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-30"></div>
-        
+
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-4xl mx-auto">
             <h1 className="mb-6 leading-tight">
@@ -152,29 +162,21 @@ export function LandingPage({ onGetStarted, onLogin }: LandingPageProps) {
                 Connect Globally
               </span>
             </h1>
-            
+
             <p className="mb-8 max-w-2xl mx-auto text-muted-foreground text-lg">
-              Join millions of learners mastering new languages through interactive lessons, 
+              Join millions of learners mastering new languages through interactive lessons,
               real conversations with native speakers, and a supportive global community.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-              <Button 
-                size="lg" 
-                className="lingua-button-primary px-8 py-3 group"
-                onClick={onGetStarted}
-              >
-                <span>Start Learning Free</span>
-                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Button>
-              <Button 
-                size="lg" 
-                variant="outline" 
-                className="px-8 py-3 group border-primary text-primary hover:bg-primary hover:text-white"
-              >
-                <Play className="mr-2 w-5 h-5" />
-                Watch Demo
-              </Button>
+              <SignedOut>
+                <SignInButton mode="modal">
+                  <Button variant="outline">Sign In</Button>
+                </SignInButton>
+                    <SignInButton mode="modal">
+                  <Button variant="outline">Get Started Free</Button>
+                </SignInButton>
+              </SignedOut>
             </div>
 
             {/* Stats */}
@@ -199,7 +201,7 @@ export function LandingPage({ onGetStarted, onLogin }: LandingPageProps) {
               <span className="text-gradient">Master Any Language</span>
             </h2>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              Our comprehensive platform combines cutting-edge technology with human connection 
+              Our comprehensive platform combines cutting-edge technology with human connection
               to accelerate your language learning journey.
             </p>
           </div>
@@ -242,7 +244,7 @@ export function LandingPage({ onGetStarted, onLogin }: LandingPageProps) {
                 icon: Globe
               },
               {
-                step: "02", 
+                step: "02",
                 title: "Learn & Practice",
                 description: "Complete interactive lessons, practice with native speakers, and join study groups that match your level.",
                 icon: BookOpen
@@ -281,7 +283,7 @@ export function LandingPage({ onGetStarted, onLogin }: LandingPageProps) {
               <span className="text-gradient">Learners Worldwide</span>
             </h2>
             <p className="text-muted-foreground text-lg">
-              Join thousands of successful language learners who achieved their goals with LinguaConnect
+              Join thousands of successful language learners who achieved their goals with Lingu
             </p>
           </div>
 
@@ -310,32 +312,26 @@ export function LandingPage({ onGetStarted, onLogin }: LandingPageProps) {
       </section>
 
       {/* CTA Section */}
-      <section id="pricing" className="py-20 bg-gradient-to-br from-green-600 to-green-700 text-white">
+      {/* <section id="pricing" className="py-20 bg-gradient-to-br from-green-600 to-green-700 text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="mb-6 text-3xl md:text-4xl font-bold">
             Ready to Start Your Language Journey?
           </h2>
           <p className="mb-8 text-green-100 text-lg max-w-2xl mx-auto">
-            Join over 2 million learners who are already speaking new languages with confidence. 
+            Join over 2 million learners who are already speaking new languages with confidence.
             Start your free trial today - no credit card required.
           </p>
-          
+
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-            <Button 
-              size="lg" 
-              className="bg-white text-green-600 hover:bg-gray-100 px-8 py-3 font-medium"
-              onClick={onGetStarted}
-            >
-              Start Free Trial
-            </Button>
-            <Button 
-              size="lg" 
-              variant="outline" 
-              className="border-white text-white hover:bg-white hover:text-green-600 px-8 py-3"
-              onClick={onLogin}
-            >
-              Sign In
-            </Button>
+            
+             <SignedOut>
+                <SignInButton mode="modal">
+                  <Button variant="outline">Sign In</Button>
+                </SignInButton>
+                 <SignInButton mode="modal">
+                  <Button variant="outline">Get Started Free</Button>
+                </SignInButton>
+              </SignedOut>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-12">
@@ -354,7 +350,7 @@ export function LandingPage({ onGetStarted, onLogin }: LandingPageProps) {
             })}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Footer */}
       <footer className="bg-card border-t border-border py-12">
@@ -366,10 +362,10 @@ export function LandingPage({ onGetStarted, onLogin }: LandingPageProps) {
                 <div className="p-2 bg-green-gradient rounded-xl shadow-green">
                   <BookOpen className="w-6 h-6 text-white" />
                 </div>
-                <span className="text-gradient font-medium">LinguaConnect</span>
+                <span className="text-gradient font-medium">Lingu</span>
               </div>
               <p className="text-muted-foreground mb-4 max-w-md">
-                Connecting language learners worldwide through interactive lessons, 
+                Connecting language learners worldwide through interactive lessons,
                 real conversations, and a supportive global community.
               </p>
               <div className="flex space-x-4">
@@ -401,7 +397,7 @@ export function LandingPage({ onGetStarted, onLogin }: LandingPageProps) {
           </div>
 
           <div className="border-t border-border mt-8 pt-8 text-center text-muted-foreground">
-            <p>&copy; 2025 LinguaConnect. All rights reserved.</p>
+            <p>&copy; 2025 Lingu. All rights reserved.</p>
           </div>
         </div>
       </footer>

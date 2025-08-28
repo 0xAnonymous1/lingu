@@ -1,5 +1,5 @@
-import React from 'react';
-import { BookOpen, Home, Users, Phone, Trophy, MessageCircle, Settings, User, LogOut } from 'lucide-react';
+import  { useState } from 'react';
+import { BookOpen, Home, Users, Phone, Trophy, User, LogOut, Edit } from 'lucide-react';
 import { useUser, useClerk } from '@clerk/clerk-react';
 import { Button } from './ui/button';
 import { useAppContext } from './AppContext';
@@ -15,22 +15,30 @@ interface SidebarProps {
 
 export function Sidebar({ activeTab, setActiveTab, isOpen, onClose, onBackToLanding }: SidebarProps) {
   const { state } = useAppContext();
-  
-  // Try to get user from Clerk if available, otherwise null
-  let user = null;
-  let signOut = null;
-  
-  try {
-    user = useUser?.()?.user || null;
-    signOut = useClerk?.()?.signOut || null;
-  } catch (error) {
-    // Clerk hooks not available, use mock data
-    user = null;
-  }
+  const { user } = useUser();
+  const { signOut } = useClerk();
 
-  // Get joined groups count for badge
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [customName, setCustomName] = useState(user?.firstName || "");
+
+  // Update Clerk name directly
+  const handleSaveName = async () => {
+    if (!user) return;
+    try {
+      await user.update({
+        firstName: customName,
+      });
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error("Failed to update name:", error);
+      alert("Failed to update name. Please try again.");
+    }
+  };
+
+  const displayName = user?.firstName || "User";
+
   const joinedGroupsCount = state.studyGroups.filter(group => group.isJoined).length;
-  
+
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: Home },
     { id: 'learn', label: 'Learn', icon: BookOpen },
@@ -44,59 +52,6 @@ export function Sidebar({ activeTab, setActiveTab, isOpen, onClose, onBackToLand
     { id: 'progress', label: 'Progress', icon: Trophy },
   ];
 
-  // Component for rendering groups section
-  const GroupsSection = ({ isMobile = false }) => {
-    if (joinedGroupsCount === 0) return null;
-    
-    return (
-      <div className="px-2 py-4">
-        <div className="px-2 mb-2">
-          <h3 className="text-xs font-medium text-sidebar-foreground/60 uppercase tracking-wider">
-            My Groups ({joinedGroupsCount})
-          </h3>
-        </div>
-        <div className="space-y-1 max-h-32 overflow-y-auto">
-          {state.studyGroups
-            .filter(group => group.isJoined)
-            .slice(0, 4)
-            .map((group) => (
-              <button
-                key={group.id}
-                onClick={() => {
-                  setActiveTab('groups');
-                  if (isMobile) {
-                    onClose();
-                  }
-                }}
-                className="group flex items-center justify-between px-2 py-1.5 text-sm rounded-md w-full transition-colors text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground"
-              >
-                <div className="flex items-center min-w-0 flex-1">
-                  <MessageCircle className="mr-2 flex-shrink-0 h-4 w-4" />
-                  <span className="truncate">{group.name}</span>
-                </div>
-                {group.online > 0 && (
-                  <div className="w-2 h-2 bg-green-500 rounded-full flex-shrink-0"></div>
-                )}
-              </button>
-            ))}
-          {joinedGroupsCount > 4 && (
-            <button
-              onClick={() => {
-                setActiveTab('groups');
-                if (isMobile) {
-                  onClose();
-                }
-              }}
-              className="w-full text-left px-2 py-1.5 text-xs text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors"
-            >
-              +{joinedGroupsCount - 4} more groups
-            </button>
-          )}
-        </div>
-      </div>
-    );
-  };
-
   const handleItemClick = (itemId: string) => {
     setActiveTab(itemId);
     if (window.innerWidth < 1024) {
@@ -108,13 +63,52 @@ export function Sidebar({ activeTab, setActiveTab, isOpen, onClose, onBackToLand
     if (signOut) {
       signOut();
     } else if (onBackToLanding) {
-      // In demo mode, go back to landing page
       onBackToLanding();
     } else {
-      // Fallback: refresh the page
       window.location.reload();
     }
   };
+
+  // Profile section with edit
+  const ProfileSection = () => (
+    <div className="flex-shrink-0 border-t border-sidebar-border p-4 space-y-3">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center">
+          {user?.imageUrl ? (
+            <img 
+              src={user.imageUrl} 
+              alt={displayName} 
+              className="w-10 h-10 rounded-full"
+            />
+          ) : (
+            <div className="bg-green-100 rounded-full p-2">
+              <User className="w-6 h-6 text-primary" />
+            </div>
+          )}
+          <div className="ml-3">
+            <p className="font-medium text-sidebar-foreground">{displayName}</p>
+            <p className="text-sidebar-foreground/60">Student</p>
+          </div>
+        </div>
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="p-1 rounded-md hover:bg-sidebar-accent/50"
+        >
+          <Edit className="w-4 h-4 text-sidebar-foreground" />
+        </button>
+      </div>
+
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={handleSignOut}
+        className="w-full justify-start text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground"
+      >
+        <LogOut className="mr-2 h-4 w-4" />
+        Sign Out
+      </Button>
+    </div>
+  );
 
   return (
     <>
@@ -123,7 +117,7 @@ export function Sidebar({ activeTab, setActiveTab, isOpen, onClose, onBackToLand
         <div className="flex flex-col flex-grow bg-sidebar border-r border-sidebar-border pt-5 pb-4 overflow-y-auto">
           <div className="flex items-center flex-shrink-0 px-4">
             <BookOpen className="w-8 h-8 text-primary" />
-            <span className="ml-2 font-bold text-sidebar-foreground">LinguaConnect</span>
+            <span className="ml-2 font-bold text-sidebar-foreground">Lingu</span>
           </div>
           
           <div className="mt-8 flex-grow flex flex-col">
@@ -157,39 +151,7 @@ export function Sidebar({ activeTab, setActiveTab, isOpen, onClose, onBackToLand
               })}
             </nav>
 
-            {/* My Groups Section - Desktop */}
-            <GroupsSection isMobile={false} />
-            
-            <div className="flex-shrink-0 border-t border-sidebar-border p-4 space-y-3">
-              <div className="flex items-center">
-                {user?.imageUrl ? (
-                  <img 
-                    src={user.imageUrl} 
-                    alt={user.fullName || 'User'} 
-                    className="w-10 h-10 rounded-full"
-                  />
-                ) : (
-                  <div className="bg-green-100 rounded-full p-2">
-                    <User className="w-6 h-6 text-primary" />
-                  </div>
-                )}
-                <div className="ml-3 flex-1">
-                  <p className="font-medium text-sidebar-foreground">
-                    {user?.fullName || user?.firstName || 'User'}
-                  </p>
-                  <p className="text-sidebar-foreground/60">Student</p>
-                </div>
-              </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleSignOut}
-                className="w-full justify-start text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground"
-              >
-                <LogOut className="mr-2 h-4 w-4" />
-                {signOut ? 'Sign Out' : 'Back to Home'}
-              </Button>
-            </div>
+            <ProfileSection />
           </div>
         </div>
       </div>
@@ -200,7 +162,7 @@ export function Sidebar({ activeTab, setActiveTab, isOpen, onClose, onBackToLand
           <div className="flex items-center justify-between flex-shrink-0 px-4 py-3 border-b border-sidebar-border">
             <div className="flex items-center">
               <BookOpen className="w-8 h-8 text-primary" />
-              <span className="ml-2 font-bold text-sidebar-foreground">LinguaConnect</span>
+              <span className="ml-2 font-bold text-sidebar-foreground">Lingu</span>
             </div>
             <button
               onClick={onClose}
@@ -211,7 +173,7 @@ export function Sidebar({ activeTab, setActiveTab, isOpen, onClose, onBackToLand
               </svg>
             </button>
           </div>
-          
+
           <div className="flex-grow flex flex-col pt-5 pb-4 overflow-y-auto">
             <nav className="flex-1 px-2 space-y-1">
               {menuItems.map((item) => {
@@ -243,42 +205,29 @@ export function Sidebar({ activeTab, setActiveTab, isOpen, onClose, onBackToLand
               })}
             </nav>
 
-            {/* My Groups Section - Mobile */}
-            <GroupsSection isMobile={true} />
-            
-            <div className="flex-shrink-0 border-t border-sidebar-border p-4 space-y-3">
-              <div className="flex items-center">
-                {user?.imageUrl ? (
-                  <img 
-                    src={user.imageUrl} 
-                    alt={user.fullName || 'User'} 
-                    className="w-10 h-10 rounded-full"
-                  />
-                ) : (
-                  <div className="bg-green-100 rounded-full p-2">
-                    <User className="w-6 h-6 text-primary" />
-                  </div>
-                )}
-                <div className="ml-3 flex-1">
-                  <p className="font-medium text-sidebar-foreground">
-                    {user?.fullName || user?.firstName || 'User'}
-                  </p>
-                  <p className="text-sidebar-foreground/60">Student</p>
-                </div>
-              </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleSignOut}
-                className="w-full justify-start text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground"
-              >
-                <LogOut className="mr-2 h-4 w-4" />
-                {signOut ? 'Sign Out' : 'Back to Home'}
-              </Button>
-            </div>
+            <ProfileSection />
           </div>
         </div>
       </div>
+
+      {/* Modal for editing name */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl p-6 w-80 shadow-lg">
+            <h2 className="text-lg font-semibold mb-4">Edit Name</h2>
+            <input
+              type="text"
+              value={customName}
+              onChange={(e) => setCustomName(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-primary"
+            />
+            <div className="flex justify-end space-x-2 mt-4">
+              <Button variant="ghost" onClick={() => setIsModalOpen(false)}>Cancel</Button>
+              <Button onClick={handleSaveName}>Save</Button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
