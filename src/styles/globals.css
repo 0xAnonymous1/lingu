@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+* {
+  scroll-behavior: smooth;
+}
+
 @custom-variant dark (&:is(.dark *));
 :root {
   --font-size: 14px;
@@ -40,7 +44,7 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
-  
+
   /* Text size tokens for proper typography scaling */
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
@@ -128,7 +132,7 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-  
+
   /* Green color palette for LinguaConnect branding */
   --color-green-50: #f0fdf4;
   --color-green-100: #dcfce7;
@@ -222,22 +226,31 @@ html {
 /* Custom utility classes for LinguaConnect */
 @layer utilities {
   .text-gradient {
-    background: linear-gradient(135deg, var(--color-green-500), var(--color-green-600));
+    background: linear-gradient(
+      135deg,
+      var(--color-green-500),
+      var(--color-green-600)
+    );
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
-  
+
   .shadow-green {
-    box-shadow: 0 4px 6px -1px rgb(34 197 94 / 0.1), 0 2px 4px -2px rgb(34 197 94 / 0.1);
+    box-shadow: 0 4px 6px -1px rgb(34 197 94 / 0.1),
+      0 2px 4px -2px rgb(34 197 94 / 0.1);
   }
-  
+
   .border-green {
     border-color: var(--color-green-200);
   }
-  
+
   .bg-green-gradient {
-    background: linear-gradient(135deg, var(--color-green-500), var(--color-green-600));
+    background: linear-gradient(
+      135deg,
+      var(--color-green-500),
+      var(--color-green-600)
+    );
   }
 }
 
@@ -246,15 +259,15 @@ html {
   .lingua-button-primary {
     @apply bg-green-600 hover:bg-green-700 text-white font-medium px-4 py-2 rounded-lg transition-colors;
   }
-  
+
   .lingua-button-secondary {
     @apply bg-transparent hover:bg-green-50 text-green-600 border border-green-200 font-medium px-4 py-2 rounded-lg transition-colors;
   }
-  
+
   .lingua-card {
     @apply bg-card border border-border rounded-lg shadow-sm hover:shadow-md transition-shadow;
   }
-  
+
   .lingua-input {
     @apply bg-input-background border border-border rounded-lg px-3 py-2 text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors;
   }
@@ -265,30 +278,30 @@ html {
   .clerk-container {
     font-size: var(--font-size);
   }
-  
+
   /* Override Clerk's default styles to match LinguaConnect design */
   .cl-rootBox {
     font-family: inherit;
   }
-  
+
   .cl-card {
     background: var(--card) !important;
     border: 1px solid var(--border) !important;
     border-radius: var(--radius) !important;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
   }
-  
+
   .cl-headerTitle {
     color: var(--foreground) !important;
     font-size: var(--text-xl) !important;
     font-weight: var(--font-weight-medium) !important;
   }
-  
+
   .cl-headerSubtitle {
     color: var(--muted-foreground) !important;
     font-size: var(--text-base) !important;
   }
-  
+
   .cl-socialButtonsBlockButton {
     background: var(--input-background) !important;
     border: 1px solid var(--border) !important;
@@ -299,14 +312,18 @@ html {
     height: 48px !important;
     transition: all 0.2s ease !important;
   }
-  
+
   .cl-socialButtonsBlockButton:hover {
     background: var(--accent) !important;
     border-color: var(--primary) !important;
   }
-  
+
   .cl-formButtonPrimary {
-    background: linear-gradient(135deg, var(--color-green-600), var(--color-green-700)) !important;
+    background: linear-gradient(
+      135deg,
+      var(--color-green-600),
+      var(--color-green-700)
+    ) !important;
     border: none !important;
     border-radius: var(--radius) !important;
     color: white !important;
@@ -315,12 +332,16 @@ html {
     height: 48px !important;
     transition: all 0.2s ease !important;
   }
-  
+
   .cl-formButtonPrimary:hover {
-    background: linear-gradient(135deg, var(--color-green-700), var(--color-green-800)) !important;
+    background: linear-gradient(
+      135deg,
+      var(--color-green-700),
+      var(--color-green-800)
+    ) !important;
     transform: scale(1.02) !important;
   }
-  
+
   .cl-formFieldInput {
     background: var(--input-background) !important;
     border: 1px solid var(--border) !important;
@@ -330,50 +351,50 @@ html {
     height: 48px !important;
     padding: 12px !important;
   }
-  
+
   .cl-formFieldInput:focus {
     border-color: var(--primary) !important;
     box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2) !important;
     outline: none !important;
   }
-  
+
   .cl-formFieldInput::placeholder {
     color: var(--muted-foreground) !important;
   }
-  
+
   .cl-formFieldLabel {
     color: var(--foreground) !important;
     font-size: var(--text-base) !important;
     font-weight: var(--font-weight-medium) !important;
   }
-  
+
   .cl-identityPreviewText {
     color: var(--foreground) !important;
   }
-  
+
   .cl-identityPreviewEditButton,
   .cl-formResendCodeLink,
   .cl-footerActionLink {
     color: var(--primary) !important;
     font-weight: var(--font-weight-medium) !important;
   }
-  
+
   .cl-identityPreviewEditButton:hover,
   .cl-formResendCodeLink:hover,
   .cl-footerActionLink:hover {
     color: var(--color-green-700) !important;
   }
-  
+
   .cl-dividerLine {
     background: var(--border) !important;
   }
-  
+
   .cl-dividerText {
     background: var(--card) !important;
     color: var(--muted-foreground) !important;
     font-size: var(--text-base) !important;
   }
-  
+
   .cl-alternativeMethodsBlockButton {
     background: transparent !important;
     border: 1px solid var(--border) !important;
@@ -382,12 +403,12 @@ html {
     font-weight: var(--font-weight-medium) !important;
     transition: all 0.2s ease !important;
   }
-  
+
   .cl-alternativeMethodsBlockButton:hover {
     background: var(--color-green-50) !important;
     border-color: var(--primary) !important;
   }
-  
+
   .cl-internal-b3fm6y {
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1) !important;
   }
