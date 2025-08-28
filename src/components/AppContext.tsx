@@ -393,17 +393,9 @@ const AppContext = createContext<{
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(appReducer, getInitialState());
- 
+
   // Try to get Clerk user if available
-  let clerkUser = null;
-  try {
-      
-       clerkUser = useUser()?.user || null;
-  
-  } catch {
-    // Clerk not available, clerkUser remains null
-    <p>Error loading user data</p>;
-  }
+  const { user: clerkUser } = useUser(); // always call it at the top
 
   // Update user information when Clerk user data is available
   useEffect(() => {
@@ -414,18 +406,20 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           id: clerkUser.id,
           name:
             clerkUser.fullName ||
-            `${clerkUser.firstName} ${clerkUser.lastName}`.trim() ||
+            `${clerkUser.firstName ?? ""} ${clerkUser.lastName ?? ""}`.trim() ||
             "User",
           email:
-            clerkUser.primaryEmailAddress?.emailAddress || "user@example.com",
+            clerkUser.primaryEmailAddress?.emailAddress ?? "user@example.com",
           avatar:
-            clerkUser.imageUrl ||
-            clerkUser.firstName?.charAt(0) + clerkUser.lastName?.charAt(0) ||
-            "U",
+            clerkUser.imageUrl ??
+            (`${clerkUser.firstName?.charAt(0) ?? ""}${
+              clerkUser.lastName?.charAt(0) ?? ""
+            }` ||
+              "U"),
         },
       });
     }
-  }, [clerkUser]);
+  }, [clerkUser, dispatch]);
 
   // Save state to localStorage on changes
   useEffect(() => {
