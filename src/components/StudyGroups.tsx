@@ -128,6 +128,13 @@ export function StudyGroups() {
     });
     setNewGroupDialog(false);
   };
+const handleDeleteGroup = (id: string) => {
+  if (window.confirm("Are you sure you want to delete this group?")) {
+    dispatch({ type: "DELETE_GROUP", groupId: id });
+    console.log("Deleted group:", id); // 👀 Debug check
+    toast.success("Group deleted successfully!");
+  }
+};
 
   const handleJoinGroup = (groupId: string) => {
     dispatch({ type: "JOIN_GROUP", groupId });
@@ -350,17 +357,29 @@ export function StudyGroups() {
                         Leave
                       </Button>
                     ) : (
-                      <Button
-                        size="sm"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleJoinGroup(group.id);
-                        }}
-                        className="bg-green-600 hover:bg-green-700"
-                      >
-                        <UserPlus className="w-3 h-3 mr-1" />
-                        Join
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleJoinGroup(group.id);
+                          }}
+                          className="bg-green-600 hover:bg-green-700"
+                        >
+                          <UserPlus className="w-3 h-3 mr-1" />
+                          Join
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteGroup(group.id);
+                          }}
+                        >
+                          Delete
+                        </Button>
+                      </div>
                     )}
                   </div>
                 </div>

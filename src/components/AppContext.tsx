@@ -84,6 +84,7 @@ type AppAction =
   | { type: "JOIN_GROUP"; groupId: string }
   | { type: "LEAVE_GROUP"; groupId: string }
   | { type: "CREATE_GROUP"; group: Omit<StudyGroup, "id"> }
+  | { type: "DELETE_GROUP"; groupId: string }
   | { type: "ADD_MESSAGE"; groupId: string; message: Omit<GroupMessage, "id"> }
   | { type: "UNLOCK_ACHIEVEMENT"; achievementId: string }
   | { type: "UPDATE_SETTINGS"; settings: Partial<AppState["settings"]> }
@@ -290,6 +291,11 @@ function appReducer(state: AppState, action: AppAction): AppState {
         ),
       };
     }
+    case "DELETE_GROUP":
+      return {
+        ...state,
+        groups: state.groups.filter((g) => g.id !== action.groupId), // ✅ remove from groups
+      };
 
     case "CREATE_GROUP": {
       const newGroup: StudyGroup = {
