@@ -10,6 +10,7 @@ import {
   Video,
   UserPlus,
   UserMinus,
+  Trash,
 } from "lucide-react";
 // import {
 //   Card,
@@ -195,6 +196,7 @@ export function StudyGroups() {
       status: "online",
     },
   ];
+  
 
   return (
     <div className="h-screen flex flex-col lg:flex-row">
@@ -357,12 +359,25 @@ export function StudyGroups() {
                           e.stopPropagation();
                           handleJoinGroup(group.id);
                         }}
-                        className="bg-green-600 hover:bg-green-700"
+                        className="bg-green-600 hover:bg-green-700 text-white"
                       >
                         <UserPlus className="w-3 h-3 mr-1" />
                         Join
                       </Button>
                     )}
+
+                    {/* Delete button */}
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteGroup(group.id);
+                      }}
+                      className="text-white bg-red-600 hover:bg-red-700"
+                    >
+                      🚮 Delete
+                    </Button>
                   </div>
                 </div>
               </div>
