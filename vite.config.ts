@@ -1,26 +1,34 @@
-import { defineConfig } from 'vite'
-import tailwindcss from '@tailwindcss/vite'
+import { defineConfig } from "vite";
+import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   plugins: [tailwindcss()],
-  build: {
-    sourcemap: false, // disables sourcemap errors
-    chunkSizeWarningLimit: 1000, // increase chunk warning limit (default: 500kb)
+   build: {
+    chunkSizeWarningLimit: 1000,
+    sourcemap: false, // stop generating sourcemaps
 
     rollupOptions: {
-      output: {
-        manualChunks: {
-          react: ["react", "react-dom"],
-          radix: [
-            "@radix-ui/react-dialog",
-            "@radix-ui/react-select",
-            "@radix-ui/react-radio-group",
-            "@radix-ui/react-progress",
-            "@radix-ui/react-label",
-          ],
-          ui: ["sonner", "next-themes"],
-        },
+      onwarn(warning, warn) {
+        // Ignore "use client" and sourcemap errors
+        if (
+          warning.message.includes('"use client"') ||
+          warning.message.includes("sourcemap")
+        ) {
+          return;
+        }
+        warn(warning);
       },
-    },
+      output: {
+        manualChunks(id) {
+          if (id.includes("node_modules")) {
+            return id
+              .toString()
+              .split("node_modules/")[1]
+              .split("/")[0]
+              .toString();
+          }
+        }
+      }
+    }
   },
   optimizeDeps: {
     exclude: ["next-themes"], // avoids useless "use client" warnings
