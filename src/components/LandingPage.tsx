@@ -101,15 +101,30 @@ export function LandingPage() {
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-8">
-              <a href="#features" className="text-foreground hover:text-primary transition-colors">Features</a>
-              <a href="#testimonials" className="text-foreground hover:text-primary transition-colors">Reviews</a>
-              <a href="#pricing" className="text-foreground hover:text-primary transition-colors">Pricing</a>
-          
- <SignedOut>
+              <a
+                href="#features"
+                className="text-foreground hover:text-primary transition-colors"
+              >
+                Features
+              </a>
+              <a
+                href="#testimonials"
+                className="text-foreground hover:text-primary transition-colors"
+              >
+                Reviews
+              </a>
+              <a
+                href=""
+                className="text-foreground hover:text-primary transition-colors"
+              >
+                Pricing <span className="text-red-300">(coming soon)</span>
+              </a>
+
+              <SignedOut>
                 <SignInButton mode="modal">
                   <Button variant="outline">Sign In</Button>
                 </SignInButton>
-                    <SignInButton mode="modal">
+                <SignInButton mode="modal">
                   <Button variant="outline">Get Started Free</Button>
                 </SignInButton>
               </SignedOut>
@@ -122,7 +137,11 @@ export function LandingPage() {
                 size="sm"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
               >
-                {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                {isMenuOpen ? (
+                  <X className="w-5 h-5" />
+                ) : (
+                  <Menu className="w-5 h-5" />
+                )}
               </Button>
             </div>
           </div>
@@ -130,18 +149,33 @@ export function LandingPage() {
           {/* Mobile Navigation */}
           {isMenuOpen && (
             <div className="md:hidden py-4 space-y-4 border-t border-border">
-              <a href="#features" className="block text-foreground hover:text-primary transition-colors">Features</a>
-              <a href="#testimonials" className="block text-foreground hover:text-primary transition-colors">Reviews</a>
-              <a href="#pricing" className="block text-foreground hover:text-primary transition-colors">Pricing</a>
-              <div className="space-y-2 pt-2">
-               <SignedOut>
-                <SignInButton mode="modal">
-                  <Button variant="outline">Sign In</Button>
-                </SignInButton>
-                    <SignInButton mode="modal">
-                  <Button variant="outline">Get Started Free</Button>
-                </SignInButton>
-              </SignedOut>
+              <a
+                href="#features"
+                className="block text-foreground hover:text-primary transition-colors"
+              >
+                Features
+              </a>
+              <a
+                href="#testimonials"
+                className="block text-foreground hover:text-primary transition-colors"
+              >
+                Reviews
+              </a>
+              <a
+                href="#pricing"
+                className="block text-foreground hover:text-primary transition-colors"
+              >
+                Pricing <span className="text-red-300">(coming soon)</span>
+              </a>
+              <div className="space-y-2 pt-2 flex gap-2">
+                <SignedOut>
+                  <SignInButton mode="modal">
+                    <Button variant="outline">Sign In</Button>
+                  </SignInButton>
+                  <SignInButton mode="modal">
+                    <Button variant="outline">Get Started Free</Button>
+                  </SignInButton>
+                </SignedOut>
               </div>
             </div>
           )}
@@ -164,8 +198,9 @@ export function LandingPage() {
             </h1>
 
             <p className="mb-8 max-w-2xl mx-auto text-muted-foreground text-lg">
-              Join millions of learners mastering new languages through interactive lessons,
-              real conversations with native speakers, and a supportive global community.
+              Join millions of learners mastering new languages through
+              interactive lessons, real conversations with native speakers, and
+              a supportive global community.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
@@ -173,7 +208,7 @@ export function LandingPage() {
                 <SignInButton mode="modal">
                   <Button variant="outline">Sign In</Button>
                 </SignInButton>
-                    <SignInButton mode="modal">
+                <SignInButton mode="modal">
                   <Button variant="outline">Get Started Free</Button>
                 </SignInButton>
               </SignedOut>
@@ -183,7 +218,9 @@ export function LandingPage() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16">
               {stats.map((stat, index) => (
                 <div key={index} className="text-center">
-                  <div className="text-2xl md:text-3xl font-bold text-primary mb-1">{stat.number}</div>
+                  <div className="text-2xl md:text-3xl font-bold text-primary mb-1">
+                    {stat.number}
+                  </div>
                   <div className="text-muted-foreground">{stat.label}</div>
                 </div>
               ))}
@@ -197,12 +234,12 @@ export function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="mb-4 text-3xl md:text-4xl font-bold text-foreground">
-              Everything You Need to{' '}
+              Everything You Need to{" "}
               <span className="text-gradient">Master Any Language</span>
             </h2>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              Our comprehensive platform combines cutting-edge technology with human connection
-              to accelerate your language learning journey.
+              Our comprehensive platform combines cutting-edge technology with
+              human connection to accelerate your language learning journey.
             </p>
           </div>
 
@@ -210,13 +247,22 @@ export function LandingPage() {
             {features.map((feature, index) => {
               const Icon = feature.icon;
               return (
-                <Card key={index} className="lingua-card p-6 hover:scale-105 transition-all duration-300 cursor-pointer group">
+                <Card
+                  key={index}
+                  className="lingua-card p-6 hover:scale-105 transition-all duration-300 cursor-pointer group"
+                >
                   <CardContent className="p-0">
-                    <div className={`w-12 h-12 rounded-xl ${feature.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                    <div
+                      className={`w-12 h-12 rounded-xl ${feature.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}
+                    >
                       <Icon className="w-6 h-6" />
                     </div>
-                    <h3 className="font-medium text-foreground mb-2">{feature.title}</h3>
-                    <p className="text-muted-foreground">{feature.description}</p>
+                    <h3 className="font-medium text-foreground mb-2">
+                      {feature.title}
+                    </h3>
+                    <p className="text-muted-foreground">
+                      {feature.description}
+                    </p>
                   </CardContent>
                 </Card>
               );
@@ -230,7 +276,7 @@ export function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="mb-4 text-3xl md:text-4xl font-bold text-foreground">
-              Start Speaking in{' '}
+              Start Speaking in{" "}
               <span className="text-gradient">Just 3 Steps</span>
             </h2>
           </div>
@@ -240,21 +286,24 @@ export function LandingPage() {
               {
                 step: "01",
                 title: "Choose Your Language",
-                description: "Select from 40+ languages and set your learning goals. Our AI will create a personalized curriculum just for you.",
-                icon: Globe
+                description:
+                  "Select from 40+ languages and set your learning goals. Our AI will create a personalized curriculum just for you.",
+                icon: Globe,
               },
               {
                 step: "02",
                 title: "Learn & Practice",
-                description: "Complete interactive lessons, practice with native speakers, and join study groups that match your level.",
-                icon: BookOpen
+                description:
+                  "Complete interactive lessons, practice with native speakers, and join study groups that match your level.",
+                icon: BookOpen,
               },
               {
                 step: "03",
                 title: "Track Progress",
-                description: "Monitor your improvement with detailed analytics, earn achievements, and celebrate milestones with the community.",
-                icon: Award
-              }
+                description:
+                  "Monitor your improvement with detailed analytics, earn achievements, and celebrate milestones with the community.",
+                icon: Award,
+              },
             ].map((item, index) => {
               const Icon = item.icon;
               return (
@@ -265,7 +314,9 @@ export function LandingPage() {
                   <div className="relative bg-background rounded-full w-16 h-16 mx-auto mb-6 flex items-center justify-center border-4 border-primary">
                     <Icon className="w-8 h-8 text-primary" />
                   </div>
-                  <h3 className="font-medium text-foreground mb-2">{item.title}</h3>
+                  <h3 className="font-medium text-foreground mb-2">
+                    {item.title}
+                  </h3>
                   <p className="text-muted-foreground">{item.description}</p>
                 </div>
               );
@@ -279,11 +330,11 @@ export function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="mb-4 text-3xl md:text-4xl font-bold text-foreground">
-              Loved by{' '}
-              <span className="text-gradient">Learners Worldwide</span>
+              Loved by <span className="text-gradient">Learners Worldwide</span>
             </h2>
             <p className="text-muted-foreground text-lg">
-              Join thousands of successful language learners who achieved their goals with Lingu
+              Join thousands of successful language learners who achieved their
+              goals with Lingu
             </p>
           </div>
 
@@ -293,16 +344,27 @@ export function LandingPage() {
                 <CardContent className="p-0">
                   <div className="flex items-center mb-4">
                     {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
+                      <Star
+                        key={i}
+                        className="w-5 h-5 text-yellow-400 fill-current"
+                      />
                     ))}
                   </div>
-                  <p className="text-foreground mb-4 italic">"{testimonial.text}"</p>
+                  <p className="text-foreground mb-4 italic">
+                    "{testimonial.text}"
+                  </p>
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="font-medium text-foreground">{testimonial.name}</div>
-                      <div className="text-muted-foreground">{testimonial.country}</div>
+                      <div className="font-medium text-foreground">
+                        {testimonial.name}
+                      </div>
+                      <div className="text-muted-foreground">
+                        {testimonial.country}
+                      </div>
                     </div>
-                    <div className="text-primary font-medium">{testimonial.language}</div>
+                    <div className="text-primary font-medium">
+                      {testimonial.language}
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -365,8 +427,8 @@ export function LandingPage() {
                 <span className="text-gradient font-medium">Lingu</span>
               </div>
               <p className="text-muted-foreground mb-4 max-w-md">
-                Connecting language learners worldwide through interactive lessons,
-                real conversations, and a supportive global community.
+                Connecting language learners worldwide through interactive
+                lessons, real conversations, and a supportive global community.
               </p>
               <div className="flex space-x-4">
                 {/* Social media icons would go here */}
@@ -377,10 +439,26 @@ export function LandingPage() {
             <div>
               <h3 className="font-medium text-foreground mb-4">Product</h3>
               <ul className="space-y-2 text-muted-foreground">
-                <li><a href="#" className="hover:text-primary transition-colors">Features</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Pricing</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Languages</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Mobile App</a></li>
+                <li>
+                  <a href="#" className="hover:text-primary transition-colors">
+                    Features
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-primary transition-colors">
+                    Pricing
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-primary transition-colors">
+                    Languages
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-primary transition-colors">
+                    Mobile App
+                  </a>
+                </li>
               </ul>
             </div>
 
@@ -388,10 +466,26 @@ export function LandingPage() {
             <div>
               <h3 className="font-medium text-foreground mb-4">Support</h3>
               <ul className="space-y-2 text-muted-foreground">
-                <li><a href="#" className="hover:text-primary transition-colors">Help Center</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Contact Us</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Terms of Service</a></li>
+                <li>
+                  <a href="#" className="hover:text-primary transition-colors">
+                    Help Center
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-primary transition-colors">
+                    Contact Us
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-primary transition-colors">
+                    Privacy Policy
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-primary transition-colors">
+                    Terms of Service
+                  </a>
+                </li>
               </ul>
             </div>
           </div>
