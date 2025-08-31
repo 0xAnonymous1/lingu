@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { BookOpen, Play, CheckCircle, Star, ArrowRight, ArrowLeft, Volume2, RotateCcw, Target, Trophy, Clock } from 'lucide-react';
+import { useState } from 'react';
+import {  Play, CheckCircle, Star, ArrowRight, ArrowLeft, Volume2, RotateCcw, Target, Trophy, Clock } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';

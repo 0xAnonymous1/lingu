@@ -115,6 +115,8 @@ export function StudyGroups() {
     };
 
     // Add to state (you would typically send this to your backend)
+    dispatch({ type: "CREATE_GROUP", group: newGroup });
+    setSelectedGroup(newGroup.id);
     toast.success("Study group created successfully!");
 
     // Reset form
@@ -139,6 +141,7 @@ export function StudyGroups() {
     }
     toast.success("Left group successfully!");
   };
+  
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -432,7 +435,11 @@ export function StudyGroups() {
                     <div className="flex-shrink-0">
                       <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
                         <span className="text-xs font-medium text-green-700">
-                          {message.avatar}
+                          <img
+                            src={message.avatar}
+                            alt="avatar"
+                            className="rounded-full"
+                          />
                         </span>
                       </div>
                     </div>

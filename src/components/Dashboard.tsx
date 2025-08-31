@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { BookOpen, Users, Trophy, Clock, ArrowRight, Play, CheckCircle, Target, TrendingUp } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
