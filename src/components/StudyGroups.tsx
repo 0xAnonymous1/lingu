@@ -364,21 +364,23 @@ const handleDeleteGroup = (id: string) => {
                             e.stopPropagation();
                             handleJoinGroup(group.id);
                           }}
-                          className="bg-green-600 hover:bg-green-700"
+                          className="bg-green-600 hover:bg-green-700 hover:cursor-pointer"
                         >
                           <UserPlus className="w-3 h-3 mr-1" />
                           Join
                         </Button>
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDeleteGroup(group.id);
-                          }}
-                        >
-                          Delete
-                        </Button>
+                        {state.studyGroups.map((group) => (
+                          <div key={group.id}>
+                            <Button
+                              size="sm"
+                              onClick={() => handleDeleteGroup(group.id)}
+                              className="bg-green-600 hover:bg-green-700 hover:cursor-pointer"
+                            >
+                              <UserMinus className="" />
+                              Delete
+                            </Button>
+                          </div>
+                        ))}
                       </div>
                     )}
                   </div>

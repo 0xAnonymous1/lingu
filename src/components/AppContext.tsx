@@ -95,6 +95,7 @@ type AppAction =
   | { type: "LOAD_STATE"; state: AppState };
 
 const defaultInitialState: AppState = {
+  
   user: {
     id: "user-1",
     name: "Alex Johnson",
@@ -195,6 +196,7 @@ const defaultInitialState: AppState = {
     language: "English",
   },
   callHistory: [],
+   
 };
 
 // Function to safely load state from localStorage
@@ -294,7 +296,7 @@ function appReducer(state: AppState, action: AppAction): AppState {
     case "DELETE_GROUP":
       return {
         ...state,
-        groups: state.groups.filter((g) => g.id !== action.groupId), // ✅ remove from groups
+       studyGroups: state.studyGroups.filter((g) => g.id !== action.groupId),
       };
 
     case "CREATE_GROUP": {
